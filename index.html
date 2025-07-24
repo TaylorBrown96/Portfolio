@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Terminal - Taylor J. Brown</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="contact-card">
+        Work Email: <a href="mailto:taylor.j.brown1996@gmail.com">taylor.j.brown1996@gmail.com</a><br>
+        School Email: <a href="mailto:tjbrown8@ncsu.edu">tjbrown8@ncsu.edu</a><br>
+        Phone: <a href="tel:+19109946647">(916) 873-7714</a><br>
+        GitHub: <a href="https://github.com/TaylorBrown96" target="_blank">github.com/TaylorBrown96</a><br>
+        LinkedIn: <a href="https://www.linkedin.com/in/browntaylorj/" target="_blank">linkedin.com/in/browntaylorj</a><br>
+        Location: Fayetteville, NC
+    </div>
+
+  <div class="terminal">
+    <div class="ascii-art">
+      <pre>
+
+ ________                   __                               _____        _______                                              
+/        |                 /  |                             /     |      /       \                                             
+$$$$$$$$/______   __    __ $$ |  ______    ______           $$$$$ |      $$$$$$$  |  ______    ______   __   __   __  _______  
+   $$ | /      \ /  |  /  |$$ | /      \  /      \             $$ |      $$ |__$$ | /      \  /      \ /  | /  | /  |/       \ 
+   $$ | $$$$$$  |$$ |  $$ |$$ |/$$$$$$  |/$$$$$$  |       __   $$ |      $$    $$< /$$$$$$  |/$$$$$$  |$$ | $$ | $$ |$$$$$$$  |
+   $$ | /    $$ |$$ |  $$ |$$ |$$ |  $$ |$$ |  $$/       /  |  $$ |      $$$$$$$  |$$ |  $$/ $$ |  $$ |$$ | $$ | $$ |$$ |  $$ |
+   $$ |/$$$$$$$ |$$ \__$$ |$$ |$$ \__$$ |$$ |            $$ \__$$ |      $$ |__$$ |$$ |      $$ \__$$ |$$ \_$$ \_$$ |$$ |  $$ |
+   $$ |$$    $$ |$$    $$ |$$ |$$    $$/ $$ |            $$    $$/       $$    $$/ $$ |      $$    $$/ $$   $$   $$/ $$ |  $$ |
+   $$/  $$$$$$$/  $$$$$$$ |$$/  $$$$$$/  $$/              $$$$$$/        $$$$$$$/  $$/        $$$$$$/   $$$$$/$$$$/  $$/   $$/ 
+                 /  \__$$ |                                                                                                    
+                 $$    $$/                                                                                                     
+                  $$$$$$/                                                                                                      
+      </pre>
+    </div>
+
+    <div id="output" class="output">
+      <!-- dynamic output will go here -->
+    </div>
+
+    <form class="input-area" onsubmit="handleInput(event)">
+      <span class="green">taylor@localhost</span><span class="white">:</span><span class="blue">~</span><span class="white">$</span>
+      <input type="text" id="cmdInput" class="terminal-input" autocomplete="off" autofocus>
+    </form>
+  </div>
+
+  <footer class="footer">
+    © Taylor J. Brown 2025. All Rights Reserved.
+  </footer>
+
+  <script>
+    const output = document.getElementById("output");
+    const input = document.getElementById("cmdInput");
+    const promptPrefix = `<span class="green">taylor@localhost</span><span class="white">:</span><span class="blue">~</span><span class="white">$</span>`;
+
+    // Show placeholder on load
+    placeholderMessage();
+
+    const commandHistory = [];
+    let historyIndex = -1;
+
+    function placeholderMessage() {
+        const line = document.createElement("div");
+        line.id = "placeholder-msg";
+        line.innerHTML = `Try typing <span class='blue'>'help'</span> to begin.`;
+        output.appendChild(line);
+    }
+
+    function printOutput(html) {
+        const line = document.createElement("div");
+        line.innerHTML = html;
+        output.appendChild(line);
+        output.scrollTop = output.scrollHeight;
+    }
+
+    function calculateAge(birthDateStr) {
+        const birthDate = new Date(birthDateStr);
+        const today = new Date();
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const hasHadBirthdayThisYear =
+            today.getMonth() > birthDate.getMonth() ||
+            (today.getMonth() === birthDate.getMonth() && today.getDate() >= birthDate.getDate());
+
+        if (!hasHadBirthdayThisYear) {
+            age--;
+        }
+
+        return age;
+    }
+
+
+    let hasUsedCommand = false;
+
+    function handleInput(e) {
+        e.preventDefault();
+        const cmd = input.value.trim();
+        if (cmd === "") return;
+
+        commandHistory.unshift(cmd);
+        historyIndex = -1;
+
+        // Echo prompt + command
+        printOutput(`${promptPrefix} ${cmd}`);
+        input.value = "";
+
+        const args = cmd.split(" ");
+        const base = args[0];
+
+        // Remove placeholder after first command
+        if (!hasUsedCommand && base !== "clear") {
+            const placeholder = document.getElementById("placeholder-msg");
+            if (placeholder) {
+                placeholder.remove();
+            }
+            hasUsedCommand = true;
+        }
+
+        switch (base) {
+        case "clear":
+            output.innerHTML = "";
+            hasUsedCommand = false;
+            placeholderMessage();
+            break;
+
+        case "help":
+            printOutput(`Available commands:<br><br>
+            whoami, dotcard, education, certs, army, isl, dhs, pubs<br>
+            clear, help, date, theme [1|2|3|random], motd, timeline, sudo, resume`);
+            break;
+
+        case "date":
+            printOutput(new Date().toString());
+            break;
+
+        case "theme":
+            const choice = args[1];
+
+            const themes = {
+                "1": {
+                "--bg": "#010b0d",
+                "--fg": "#b9edf7",
+                "--cursor": "#60cbdd",
+                "--black": "#08272c",
+                "--red": "#ed6677",
+                "--green": "#6ead47",
+                "--yellow": "#c68c2e",
+                "--blue": "#5a9bec",
+                "--magenta": "#c36ee7",
+                "--cyan": "#33acac",
+                "--white": "#60cbdd",
+                "--bright-black": "#1e5b65",
+                "--bright-red": "#f58993",
+                "--bright-green": "#7fc453",
+                "--bright-yellow": "#dfa13e",
+                "--bright-blue": "#7cb1f5",
+                "--bright-magenta": "#d18fef",
+                "--bright-cyan": "#3dc4c4",
+                "--bright-white": "#ddf6fb"
+                },
+                "2": {
+                "--bg": "#ddf6fb",
+                "--fg": "#134148",
+                "--cursor": "#297683",
+                "--black": "#b9edf7",
+                "--red": "#ed6677",
+                "--green": "#6ead47",
+                "--yellow": "#c68c2e",
+                "--blue": "#5a9bec",
+                "--magenta": "#c36ee7",
+                "--cyan": "#33acac",
+                "--white": "#297683",
+                "--bright-black": "#51bdce",
+                "--bright-red": "#f58993",
+                "--bright-green": "#7fc453",
+                "--bright-yellow": "#dfa13e",
+                "--bright-blue": "#7cb1f5",
+                "--bright-magenta": "#d18fef",
+                "--bright-cyan": "#3dc4c4",
+                "--bright-white": "#08272c"
+                },
+                "3": {
+                "--bg": "#2a2107",
+                "--fg": "#f8eac5",
+                "--cursor": "#e4c46a",
+                "--black": "#463811",
+                "--red": "#ed6677",
+                "--green": "#6ead47",
+                "--yellow": "#c68c2e",
+                "--blue": "#5a9bec",
+                "--magenta": "#c36ee7",
+                "--cyan": "#33acac",
+                "--white": "#e4c46a",
+                "--bright-black": "#7e6827",
+                "--bright-red": "#f58993",
+                "--bright-green": "#7fc453",
+                "--bright-yellow": "#dfa13e",
+                "--bright-blue": "#7cb1f5",
+                "--bright-magenta": "#d18fef",
+                "--bright-cyan": "#3dc4c4",
+                "--bright-white": "#fcf6e6"
+                }
+            };
+
+            if (choice === "random") {
+                const keys = Object.keys(themes);
+                const randChoice = keys[Math.floor(Math.random() * keys.length)];
+                Object.entries(themes[randChoice]).forEach(([key, val]) => {
+                    document.documentElement.style.setProperty(key, val);
+                });
+                printOutput(`Switched to random theme ${randChoice}`);
+            } else if (!themes[choice]) {
+                printOutput(`Usage: theme [1|2|3|random]<br>Example: theme 2`);
+            } else {
+                Object.entries(themes[choice]).forEach(([key, val]) => {
+                    document.documentElement.style.setProperty(key, val);
+                });
+                printOutput(`Switched to theme ${choice}`);
+            }
+            break;
+
+        case "dotcard":
+            printOutput(`<a href="https://dot.cards/taylorbrown1996" target="_blank">Taylor J. Brown</a>`)
+            break;
+
+        case "education":
+            printOutput(`- Associate in Applied Science — FTCC (2022), Computer Programming &amp; Development, Highest Honors, 4.0 GPA<br>
+                         - Bachelor of Science — UNCFSU (2025), Computer Science + Math minor, Summa Cum Laude, 4.0 GPA<br>
+                         - Master of Computer Science — NC State (2027 Expected), Software Engineering Track`);
+            break;
+
+        case "whoami":
+            const age = calculateAge("1996-12-31");
+            printOutput(`Taylor J. Brown (age ${age})<br><br>A software engineer and researcher focused on solving real-world problems using technology.<br>
+            Specializes in high-performance computing, artificial intelligence, and full-stack software development.<br>
+            Passionate about creating tools that make planetary exploration, robotics, and environmental sensing more effective.`);
+            break;
+
+        case "certs":
+            printOutput(`- SECRET Clearance (DoD issued) — Active, expires ~2026<br>
+            - Hazmat Awareness, Operations, Technician — Certified since 2017<br>
+            - Information Technology Basics — Covers foundational computing principles (2022)<br>
+            - Programming Certificates (2022):<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;• Python<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;• Java<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;• C#<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;• Database Programming`);
+            break;
+
+        case "army":
+            printOutput(`74D CBRN Specialist, US Army (Oct 2016 – Jan 2020)<br><br>
+            • Trained and led 30+ soldiers in PMT procedures (hazard monitoring)<br>
+            • Instructed 60+ service members in IET protocols including PPE, sampling, decon lines<br>
+            • Maintained over $1.8M in reconnaissance equipment (DR-SKO)<br>
+            • Managed $8.1M of weapons and special gear as NCOIC in the arms room<br>
+            • Supported incident command decisions and ensured procedural compliance (ATP 3-11.74)<br>
+            • Served as unit subject-matter expert for MOPP gear, chemical defense readiness`);
+            break;
+
+        case "isl":
+            printOutput(`Intelligent Systems Lab (ISL) | Researcher | Fayetteville State University (2023–2025) 
+            <a href="https://www.uncfsu.edu/academics/colleges-schools-and-departments/lloyd-college-of-health-science-and-technology/department-of-mathematics-and-computer-science/intelligent-systems-laboratory" target="_blank">Lab Website</a><br><br>
+
+            <strong>General Role:</strong><br>
+            • Contributed to 5 research projects focused on computer vision, machine learning, SAR data, and robotics<br>
+            • Led 3 major efforts involving multi-view object detection, planetary segmentation, and dataset automation<br>
+            • Specialized in data preprocessing, model training, evaluation, and end-to-end software pipelines<br>
+            • Created/Maintained the ISL GitHub organization and the IMPACT project website:&nbsp;<a href="https://impactisl.pythonanywhere.com/" target="_blank">https://impactisl.pythonanywhere.com/</a><br><br>
+
+            <strong>IMPACT (NASA DEAP):</strong><br>
+            • Designed a Tkinter-based tool for structured image capture and labeling<br>
+            • Trained CNN classifiers to identify geological and hazard features in Earth and planetary imagery<br>
+            • Supported wildfire detection and scientific exploration using remote sensing<br><br>
+
+            <strong>AOMRP / NASA M-STAR:</strong><br>
+            • Refined a 3D object-matching pipeline for multi-camera and multi-robot environments<br>
+            • Improved algorithm performance and accuracy for object triangulation<br>
+            • Led architecture cleanup and integration into real-time robotics workflows<br><br>
+
+            <strong>Venus SAR Segmentation:</strong><br>
+            • Trained MaskFormer / Mask2Former segmentation models on SAR imagery of Venus<br>
+            • Detected wrinkle ridges and other key geological features under radar interference<br>
+            • Validated against ground-truth labels and tuned model outputs for clarity and consistency`);
+            break;
+
+        case "dhs":
+            printOutput(`U.S. Department of Homeland Security | Summer Intern (Jun–Aug 2024)<br><br>
+            • Developed a data imputation pipeline for water level monitoring across East Coast, PR, and Gulf areas<br>
+            • Used machine learning and correlation modeling to identify gaps and fill missing time series data<br>
+            • Produced geospatial visualizations (maps + correlation matrices) for analytical insight<br>
+            • Work supported NOAA-style applications in disaster readiness and environmental monitoring`);
+            break;
+
+        case "pubs":
+            printOutput(`Publication:<br>
+            <strong>Pragmatic and ML Approaches to Backfilling Missing Data within Time Series Datasets</strong><br>
+            Published via IEEE ICMLA 2024<br>
+            DOI: <a href="https://ieeexplore.ieee.org/document/10903294?signout=success" target="_blank">
+            https://ieeexplore.ieee.org/document/10903294?signout=success</a>`);
+            break;
+
+        case "motd":
+            const messages = [
+                "Stay curious. Stay building.",
+                "Code is poetry written for machines and read by humans.",
+                "The best debugger is a good night's sleep.",
+                "Every great journey begins with git init.",
+                "You miss 100% of the commits you don't push."
+            ];
+            const motd = messages[Math.floor(Math.random() * messages.length)];
+            printOutput(`<strong>Message of the Day:</strong><br>${motd}`);
+            break;
+
+        case "timeline":
+            printOutput(`<strong>Timeline:</strong><br>
+            • 2016–2020: U.S. Army, CBRN Specialist<br>
+            • 2020–Present: Student:
+                <br>&emsp;&emsp;&emsp;- Fayetteville Technical Community College (2020-2022)
+                <br>&emsp;&emsp;&emsp;- Fayetteville State University (2023-2025)
+                <br>&emsp;&emsp;&emsp;- NC State University (2025-present)<br>
+            • 2023–2025: Researcher, Intelligent Systems Lab<br>
+            • Summer 2024: Intern, U.S. Dept. of Homeland Security`);
+            break;
+
+        case "sudo":
+            printOutput(`<span style="color: var(--red)">You are not in the sudoers file. This incident will be reported.</span>`);
+            break;
+
+        case "resume":
+            printOutput(`Download my resume: <a href="Taylor_Brown_Resume.pdf" download>Click here to download</a>`);
+            break;
+
+        default:
+            printOutput(`<span style="color: var(--red)">Command not found:</span> ${base}`);
+        }
+    }
+
+    // History navigation
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowUp") {
+        if (historyIndex < commandHistory.length - 1) {
+            historyIndex++;
+            input.value = commandHistory[historyIndex];
+        }
+        } else if (e.key === "ArrowDown") {
+        if (historyIndex > 0) {
+            historyIndex--;
+            input.value = commandHistory[historyIndex];
+        } else {
+            historyIndex = -1;
+            input.value = "";
+        }
+        }
+    });
+    </script>
+
+</body>
+</html>
